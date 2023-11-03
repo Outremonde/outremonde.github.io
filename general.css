@@ -1,6 +1,8 @@
 .navigation {
     background-color: black;
     overflow: hidden;
+}
+.link {
     color: white;
 }
 html, body {
