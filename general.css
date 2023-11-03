@@ -4,6 +4,7 @@
 }
 .link {
     color: rgb(186, 230, 250);
+    text-decoration: none;
 }
 html, body {
     width: 100%;
