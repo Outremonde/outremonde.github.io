@@ -1,6 +1,7 @@
 .navigation {
     background-color: black;
     overflow: hidden;
+    text-align: center;
 }
 .link {
     color: rgb(186, 230, 250);
