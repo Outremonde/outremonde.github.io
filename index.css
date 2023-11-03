@@ -1,5 +1,6 @@
 .navigation {
     background-color: blue;
+    overflow: hidden;
 }
 .white {
     color: white;
