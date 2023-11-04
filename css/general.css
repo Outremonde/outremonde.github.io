@@ -1,17 +1,76 @@
+/* Section Modifiers */
 .navigation {
-    background-color: black;
+    background-color: rgb(48,52,70);
     overflow: hidden;
     text-align: center;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%
 }
-.link {
-    color: rgb(186, 230, 250);
+.main {
+    padding-inline: 30px;
+    height: 100%;
+    text-align: justify;
+    margin-top: 80px;
+}
+.navigation-link {
+    line-height: 50px;
+    color: rgb(245,224,220);
     text-decoration: none;
+}
+
+
+/* Element Modifiers */
+a {
+    color: rgb(220,138,120);
+    text-decoration: none;
+ 
 }
 html, body {
     width: 100%;
     left: 0px;
     margin: 0px;
     padding: 0px;
+    
+}
+body {
     font-family: sans-serif;
     font-size: 20px;
+    background-color: rgb(239,241,245);
+    color: rgb(76,79,105);
 }
+hr {
+    size: 2px;
+}
+iframe {
+    height: 500px;
+    width: 100%;
+    box-shadow: none;
+}
+
+
+/* Optional Modifiers */
+.code {
+    font-family: monospace;
+    background-color: rgb(172,176,190);
+    border-radius: 7px;
+    
+}
+.center {
+    text-align: center;
+}
+
+
+/* No Scrollbar */
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }

@@ -3,12 +3,162 @@
   <head>
     <title>Outremonde</title>
     <link rel="stylesheet" href="/css/general.css">
+    <link rel="icon" href="/images/logo.png">
   </head>
   <body>
     <div class="navigation">
-      <a class="link" href="/main/index.html">Home - </a>
-      <a class="link" href="/main/page-list.html">Pages - </a>
-      <a class="link" href="/main/guides.html">Guides</a>
+      <a class="navigation-link" href="/main/index.html">Home - </a>
+      <a class="navigation-link" href="/main/guides.html">Guides - </a>
+      <a class="navigation-link" href="/main/projects.html">Projects - </a>
+      <a class="navigation-link" href="/main/page-list.html">Pages</a>
+    </div>
+    <div class="main">
+      <h1 class="center">Arch Linux Installation Guide</h1>
+      <p>
+        <hr>
+        This is my attempt at a simplistic Arch Linux installation guide. 
+        You can find the official Arch Linux installation guide
+        <a href="https://wiki.archlinux.org/index.php/Installation_guide">here</a>.
+        <hr>
+        <ol>
+          <li>
+            <strong>Prerequisites:</strong> To follow this tutorial you will need to be willing to erase your computer,
+            your computer needs to have been built in the last 10 years, and you need an ethernet connection. (I may add
+            a wireless connection step in the future)
+          </li>
+          <hr>
+          <li>
+            <strong>Create a bootable USB drive:</strong> In order to install Arch Linux you need a bootable usb.
+            You can download the ISO file 
+            <a href="https://www.archlinux.org/download/">here</a>.
+            You will also need 
+            <a href="https://etcher.balena.io">Balena Etcher</a>
+            or some other ISO flashing software. You must then use the software to write your downloaded ISO to a
+            USB drive.
+          </li>
+          <hr>
+          <li>
+            <strong>Boot from USB:</strong> To gain access to the tools needed to install Arch Linux, you must first
+            boot from the USB. You can do this by entering your computer's BIOS and modifying the boot order to
+            prioritize the USB drive. You should be able to exit the BIOS and see the Arch Linux grub options.
+          </li>
+          <hr>
+          <li>
+            <strong>Partitioning the Disks:</strong> To partition your disks for an Arch system, enter the following
+            commands replacing 'disk' with the name of your disk. Ex: sda, nvme0n1, etc.
+            <div class="code">
+              # find your disk <br>
+              > fdisk -l <br>
+              # select disk to operate on <br>
+              > fdisk /dev/disk <br>
+            </div>
+            Now that you're operating on the disk, you must remove preexisting partitions. 
+            To remove a partition, press 'd' and spam ENTER repeatedly. Do this until all partitions are removed.
+            You may now press 'n' to create a new partition. Press ENTER without input to select the default disk number and  
+            block size, and enter +512M for the partition size. Once that partition is created, press 'n' again to create
+            a second partition. This time, keep pressing enter to select all defaults. Now, to change the type of the partitions,
+            press 't' and select partition 1, and enter 1 as the partition type alias. Finally, press 'w' and enter to write the
+            changes to disk.
+          </li>
+          <hr>
+          <li>
+            <strong>Setting up Mirrors:</strong> A fast download speed is required to download large system files.
+            You can setup a pacman mirror for better download speed by following the commands below:
+            <div class="code">
+              # update system and install reflector <br>
+              > pacman -Syy <br>
+              > pacman -S reflector <br>
+              # replace "US" with the initials of your country <br>
+              > reflector -c "US" -f 12 -l 10 -n 12 --save /etc/pacman.d/mirrorlist <br>
+            </div>
+          </li>
+          <hr>
+          <li>
+            <strong>Install OS Components:</strong> This is the part where the actual system gets installed.
+            <div class="code">
+              # make the disk accessible to system tools (replace disk with your disk) <br>
+              > mount /dev/disk /mnt <br>
+              # install basic software like the kernel and text editor <br>
+              > pacstrap /mnt base linux linux-firmware nano <br>
+              # generate fstab, tells system where to mount things <br>
+              > genfstab -U /mnt >> /mnt/etc/fstab <br>
+              # enter the system to manage it directly <br>
+              > arch-chroot /mnt <br>
+            </div>
+          </li>
+          <hr>
+          <li>
+            <strong>Setup Locale:</strong> The locale tells your system what your keyboard layout and language are.
+            Follow the commands below to configure it.
+            <div class="code">
+              # replace US with the initials of your country <br>
+              > echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen <br>
+              > locale-gen <br>
+              > echo LANG=en_US.UTF-8 > /etc/locale.conf <br>
+              > export LANG=en_US.UTF-8 <br>
+            </div>
+          </li>
+          <hr>
+          <li>
+            <strong>Setup Networking:</strong> To allow your computer to connect to the internet, follow the commands below.
+            <div class="code">
+              # replace systemname with your chosen system name <br>
+              > echo systemname > /etc/hostname <br>
+              > nano /etc/hosts <br>
+              # paste the following text into /etc/hosts <br>
+              127.0.0.1	localhost
+              ::1		localhost
+              127.0.1.1	systemname
+
+            </div>  
+          </li>
+          <hr>
+          <li>
+            <strong>Install Bootloader:</strong> Bootloaders allow you to start your operating system. Follow the commands
+              below to install the GRUB bootloader.
+            <div class="code">
+              > pacman -S grub efibootmgr <br>
+              > mkdir /boot/efi <br>
+              > mount /dev/nvme0n1p1 /boot/efi <br>
+              > grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi <br>
+              > grub-mkconfig -o /boot/grub/grub.cfg <br>
+            </div>
+          </li>
+          <hr>
+          <li>
+            <strong>User Setup</strong> To setup a user account, follow the commands below. Replace username with your username.
+            <div class="code">
+              > pacman -S sudo <br>
+              > useradd -m username <br>
+              > passwd username <br>
+              > usermod -aG wheel,audio,video,storage username <br>
+              > EDITOR=nano visudo <br>
+              # uncomment <em>%wheel ALL=(ALL:ALL) ALL</em> line in document and save/exit it <br>
+              # run following command to set root password <br>
+              > passwd <br>
+            </div>
+          </li>
+          <hr>
+          <li>
+            <strong>Setup a Desktop:</strong> To setup the GNOME desktop, follow the commands below.
+            <div class="code">
+              > pacman -S xorg networkmanager <br>
+              > pacman -S gnome <br>
+              > systemctl anable gdm <br>
+              > systemctl enable NetworkManager <br>
+            </div>
+          </li>
+          <hr>
+          <li>
+            <strong>Conclusion:</strong> After running the commands below and rebooting, you 
+            will be able to log into a functioning Arch Linux system.
+            <div class="code">
+              > exit <br>
+              > reboot <br>
+            </div>
+          </li>
+        </ol>
+      </p>
     </div>
   </body>
 </html>
