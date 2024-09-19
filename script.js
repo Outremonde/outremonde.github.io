@@ -1,8 +1,10 @@
 // Function to set a random background image from Picsum
+/*
 async function setRandomBackgroundImage() {
     // Set the background image of the clock
     document.querySelector('body').style.backgroundImage = `url(https://picsum.photos/1920/1080/?random)`;
 }
+*/
 
 function updateClock() {
     const now = new Date();
@@ -31,4 +33,4 @@ setInterval(updateClock, 1000);
 // Initial call to set the clock immediately on page load
 updateClock();
 
-setRandomBackgroundImage();
+// setRandomBackgroundImage();
